@@ -1,47 +1,47 @@
 import subprocess
 import sys
 
-# Função para instalar pacotes
+# Function to install packages
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-# Lista de pacotes necessários
+# List of required packages
 required_packages = ["beautifulsoup4"]
 
-# Instalar pacotes necessários
+# Install required packages
 for package in required_packages:
     try:
         __import__(package)
     except ImportError:
         install(package)
 
-# Importação de bibliotecas após instalação
+# Import libraries after installation
 import urllib.request
 from bs4 import BeautifulSoup
 import csv
 
-# URL da página que você deseja acessar
+# URL of the page you want to access
 url = "https://www.fundsexplorer.com.br/funds"
 
-# Configurando o cabeçalho User-Agent
+# Configuring the User-Agent header
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
 
-# Fazendo a requisição da página
+# Making the page request
 req = urllib.request.Request(url, headers=headers)
 
 with urllib.request.urlopen(req) as response:
     page = response.read()
 
-# Parseando o HTML
+# Parsing the HTML
 soup = BeautifulSoup(page, 'html.parser')
 
-# Encontrando todos os itens desejados
+# Finding all desired items
 tickers = soup.find_all('div', class_='tickerBox')
 
-# Lista para armazenar os dados
+# List to store the data
 data = []
 
-# Coletando os dados
+# Collecting the data
 for ticker in tickers:
     type_span = ticker.find('span', class_='tickerBox__type')
     title_div = ticker.find('div', attrs={'data-element': 'ticker-box-title'})
@@ -51,17 +51,17 @@ for ticker in tickers:
         tipo = type_span.text.strip()
         nome = title_div.text.strip()
         
-        # Capturando os valores de DY e PL
+        # Capturing DY and PL values
         dy = info_boxes[0].text.strip() if len(info_boxes) > 0 else ""
         pl = info_boxes[1].text.strip() if len(info_boxes) > 1 else ""
         
-        # Adicionando dados à lista
+        # Adding data to the list
         data.append([tipo, nome, dy, pl])
 
-# Escrevendo os dados em um arquivo CSV com codificação correta
-with open('funds_data.csv', 'w', newline='', encoding='utf-8-sig') as file:
+# Writing the data to a CSV file with correct encoding
+with open('./funds_data.csv', 'w', newline='', encoding='utf-8-sig') as file:
     writer = csv.writer(file)
-    writer.writerow(['TIPO', 'NOME', 'DY(%)', 'PL(R$)'])  # Cabeçalho
+    writer.writerow(['TIPO', 'NOME', 'DY(%)', 'PL(R$)'])  # Header
     writer.writerows(data)
 
-print("Dados exportados para 'funds_data.csv'.")
+print("Data exported to 'funds_data.csv'.")
