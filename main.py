@@ -1,48 +1,49 @@
-import subprocess
-import sys
-
-# Função para instalar pacotes
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# Lista de pacotes necessários
-required_packages = ["requests", "beautifulsoup4", "pandas", "openpyxl"]
-
-# Instalar pacotes necessários
-for package in required_packages:
-    try:
-        __import__(package)
-    except ImportError:
-        install(package)
-
-# Importação de bibliotecas após instalação
-import requests
+import urllib.request
 from bs4 import BeautifulSoup
-import pandas as pd
+import csv
 
-# URL da página com a lista de FIIs
+# URL da página que você deseja acessar
 url = "https://www.fundsexplorer.com.br/funds"
 
-# Requisição para a página
-response = requests.get(url)
-soup = BeautifulSoup(response.content, 'html.parser')
+# Configurando o cabeçalho User-Agent
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
 
-# Listas para armazenar os dados
-tickers = []
-setores = []
+# Fazendo a requisição da página
+req = urllib.request.Request(url, headers=headers)
 
-# Encontrando todos os spans que contêm as informações
-spans = soup.find_all('span', class_='tickerBox__type')
+with urllib.request.urlopen(req) as response:
+   page = response.read()
 
-for span in spans:
-    texto = span.text.strip()
-    if ':' in texto:
-        ticker, setor = texto.split(':', 1)
-        tickers.append(ticker.strip())
-        setores.append(setor.strip())
+# Parseando o HTML
+soup = BeautifulSoup(page, 'html.parser')
 
-# Criando um DataFrame e exportando para Excel
-df = pd.DataFrame({'Ticker': tickers, 'Setor': setores})
-df.to_excel('lista_fiis.xlsx', index=False)
+# Encontrando todos os itens desejados
+tickers = soup.find_all('div', class_='tickerBox')
 
-print("Lista de FIIs com setores salva em 'lista_fiis.xlsx'")
+# Lista para armazenar os dados
+data = []
+
+# Coletando os dados
+for ticker in tickers:
+   type_span = ticker.find('span', class_='tickerBox__type')
+   title_div = ticker.find('div', attrs={'data-element': 'ticker-box-title'})
+   info_boxes = ticker.find_all('div', class_='tickerBox__info__box')
+
+   if type_span and title_div:
+       tipo = type_span.text.strip()
+       nome = title_div.text.strip()
+       
+       # Capturando os valores de DY e PL
+       dy = info_boxes[0].text.strip() if len(info_boxes) > 0 else ""
+       pl = info_boxes[1].text.strip() if len(info_boxes) > 1 else ""
+       
+       # Adicionando dados à lista
+       data.append([tipo, nome, dy, pl])
+
+# Escrevendo os dados em um arquivo CSV com codificação correta
+with open('funds_data.csv', 'w', newline='', encoding='utf-8-sig') as file:
+   writer = csv.writer(file)
+   writer.writerow(['TIPO', 'NOME', 'DY(%)', 'PL(R$)'])  # Cabeçalho
+   writer.writerows(data)
+
+print("Dados exportados para 'funds_data.csv'.")
