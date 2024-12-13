@@ -1,4 +1,4 @@
-# py_beautifulsoup
+# py_beautifulsoup_hlolabs
 
 # Projeto de Coleta e Análise de Dados de Fundos Imobiliários
 
@@ -27,7 +27,7 @@ Para executar este projeto, é necessário ter o Python instalado em seu ambient
 1. **Clone o repositório:**
 
     ```bash
-    git clone https://github.com/hlolabs/py_beautifulsoup_LM
+    *** rever
     cd nome-do-repositorio
     ```
 
