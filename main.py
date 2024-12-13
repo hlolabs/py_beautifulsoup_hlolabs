@@ -15,7 +15,8 @@ for package in required_packages:
     except ImportError:
         install(package)
 
-# Importação de bibliotecasimport requests
+# Importação de bibliotecas após instalação
+import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
@@ -34,11 +35,11 @@ setores = []
 spans = soup.find_all('span', class_='tickerBox__type')
 
 for span in spans:
-   texto = span.text.strip()
-   if ':' in texto:
-       ticker, setor = texto.split(':', 1)
-       tickers.append(ticker.strip())
-       setores.append(setor.strip())
+    texto = span.text.strip()
+    if ':' in texto:
+        ticker, setor = texto.split(':', 1)
+        tickers.append(ticker.strip())
+        setores.append(setor.strip())
 
 # Criando um DataFrame e exportando para Excel
 df = pd.DataFrame({'Ticker': tickers, 'Setor': setores})
