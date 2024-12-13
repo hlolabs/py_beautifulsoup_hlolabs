@@ -27,7 +27,7 @@ Para executar este projeto, é necessário ter o Python instalado em seu ambient
 1. **Clone o repositório:**
 
     ```bash
-    git clone https://github.com/seu-usuario/nome-do-repositorio.git
+    git clone https://github.com/hlolabs/py_beautifulsoup_LM
     cd nome-do-repositorio
     ```
 
@@ -124,4 +124,4 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar
 
 ## Licença
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está licenciado sob a Licença MIT.
