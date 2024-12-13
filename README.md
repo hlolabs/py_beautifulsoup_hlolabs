@@ -1,51 +1,50 @@
 # py_beautifulsoup_hlolabs
+# Real Estate Funds Data Collection and Analysis Project
 
-# Projeto de Coleta e Análise de Dados de Fundos Imobiliários
+## Description
 
-## Descrição
+This project was developed to collect real estate funds data from the [Funds Explorer](https://www.fundsexplorer.com.br/funds) website, process the information, and export it to a CSV file. The goal is to allow the analysis of the collected information, including the type of fund, name, Dividend Yield (DY), and Price-to-Earnings (PL) of each fund listed on the page.
 
-Este projeto foi desenvolvido para coletar dados de fundos imobiliários a partir do site [Funds Explorer](https://www.fundsexplorer.com.br/funds), processar as informações e exportá-las para um arquivo CSV. O objetivo é permitir a análise das informações coletadas, incluindo o tipo de fundo, nome, Dividend Yield (DY) e Preço sobre Lucro (PL) de cada fundo listado na página.
+## Features
 
-## Funcionalidades
+- Data collection of real estate funds from a web page.
+- Processing and extraction of relevant information.
+- Exporting the collected data to a CSV file.
 
-- Coleta de dados de fundos imobiliários a partir de uma página web.
-- Processamento e extração de informações relevantes.
-- Exportação dos dados coletados para um arquivo CSV.
+## Prerequisites
 
-## Pré-requisitos
+To run this project, you need to have Python installed in your environment. Additionally, the project uses some specific libraries that will be automatically installed by the code if necessary.
 
-Para executar este projeto, é necessário ter o Python instalado em seu ambiente. Além disso, o projeto utiliza algumas bibliotecas específicas, que serão instaladas automaticamente pelo próprio código, se necessário.
+## Libraries Used
 
-## Bibliotecas Utilizadas
+- **urllib.request**: Used to make HTTP requests and access the web page content.
+- **beautifulsoup4**: Used to parse HTML and extract the desired information from the page.
+- **csv**: Used to write the processed data to a CSV file.
 
-- **urllib.request**: Utilizada para realizar requisições HTTP e acessar o conteúdo da página web.
-- **beautifulsoup4**: Utilizada para fazer o parse do HTML e extrair as informações desejadas da página.
-- **csv**: Utilizada para escrever os dados processados em um arquivo CSV.
+## How to Run the Project
 
-## Como Executar o Projeto
-
-1. **Clone o repositório:**
+1. **Clone the repository:**
 
     ```bash
-    *** rever
-    cd nome-do-repositorio
+    git clone https://github.com/your-username/repository-name.git
+    cd repository-name
     ```
 
-2. **Execute o código Python:**
+2. **Run the Python code:**
 
     ```bash
     python main.py
     ```
 
-3. **Verifique o arquivo CSV gerado:**
+3. **Check the generated CSV file:**
 
-    O arquivo `funds_data.csv` será gerado na pasta do projeto, contendo os dados coletados e processados.
+    The `funds_data.csv` file will be generated in the project folder, containing the collected and processed data.
 
-## Detalhes do Código
+## Code Details
 
-O código realiza as seguintes etapas:
+The code performs the following steps:
 
-1. **Instalação de dependências**: Verifica se as bibliotecas necessárias (`beautifulsoup4`) estão instaladas e as instala automaticamente, se necessário.
+1. **Dependency installation**: Checks if the necessary libraries (`beautifulsoup4`) are installed and installs them automatically if needed.
 
     ```python
     def install(package):
@@ -59,7 +58,7 @@ O código realiza as seguintes etapas:
             install(package)
     ```
 
-2. **Importação de bibliotecas**: Importa as bibliotecas necessárias para o funcionamento do código.
+2. **Importing libraries**: Imports the libraries required for the code to function.
 
     ```python
     import urllib.request
@@ -67,7 +66,7 @@ O código realiza as seguintes etapas:
     import csv
     ```
 
-3. **Requisição da página**: Configura o cabeçalho User-Agent e faz a requisição da página web.
+3. **Page request**: Configures the User-Agent header and makes the web page request.
 
     ```python
     url = "https://www.fundsexplorer.com.br/funds"
@@ -78,14 +77,14 @@ O código realiza as seguintes etapas:
         page = response.read()
     ```
 
-4. **Parse do HTML**: Utiliza o BeautifulSoup para fazer o parse do HTML e encontrar os itens desejados.
+4. **HTML parsing**: Uses BeautifulSoup to parse the HTML and find the desired items.
 
     ```python
     soup = BeautifulSoup(page, 'html.parser')
     tickers = soup.find_all('div', class_='tickerBox')
     ```
 
-5. **Coleta de dados**: Extrai as informações relevantes (tipo, nome, DY, PL) de cada fundo imobiliário e armazena em uma lista.
+5. **Data collection**: Extracts relevant information (type, name, DY, PL) for each real estate fund and stores it in a list.
 
     ```python
     data = []
@@ -103,25 +102,26 @@ O código realiza as seguintes etapas:
             data.append([tipo, nome, dy, pl])
     ```
 
-6. **Exportação para CSV**: Escreve os dados coletados em um arquivo CSV com codificação UTF-8.
+6. **Export to CSV**: Writes the collected data to a CSV file with UTF-8 encoding.
 
     ```python
     with open('./funds_data.csv', 'w', newline='', encoding='utf-8-sig') as file:
         writer = csv.writer(file)
-        writer.writerow(['TIPO', 'NOME', 'DY(%)', 'PL(R$)'])
+        writer.writerow(['TYPE', 'NAME', 'DY(%)', 'PL(R$)'])
         writer.writerows(data)
     ```
 
-7. **Mensagem de sucesso**: Exibe uma mensagem informando que os dados foram exportados com sucesso.
+7. **Success message**: Displays a message informing that the data has been successfully exported.
 
     ```python
-    print("Dados exportados para 'funds_data.csv'.")
+    print("Data exported to 'funds_data.csv'.")
     ```
 
-## Contribuições
+## Contributions
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## Licença
+## License
 
-Este projeto está licenciado sob a Licença MIT.
+This project is licensed under the MIT License.
+
