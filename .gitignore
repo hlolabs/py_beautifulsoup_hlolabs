@@ -109,6 +109,11 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+env_hlolabs/
+.env_hlolabs/
+env_hlolabs
+.env_hlolabs
+
 
 # Spyder project settings
 .spyderproject
@@ -127,3 +132,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Excel
+*.xls
+*.xlsx
+
+# CSV
+*.csv

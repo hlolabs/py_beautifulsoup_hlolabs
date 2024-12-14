@@ -1,20 +1,6 @@
 import subprocess
 import sys
 
-# Function to install packages
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# List of required packages
-required_packages = ["beautifulsoup4"]
-
-# Install required packages
-for package in required_packages:
-    try:
-        __import__(package)
-    except ImportError:
-        install(package)
-
 # Import libraries after installation
 import urllib.request
 from bs4 import BeautifulSoup

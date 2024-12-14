@@ -1,20 +1,6 @@
 import subprocess
 import sys
 
-# Function to install packages
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# List of required packages
-required_packages = ["pandas", "openpyxl", "matplotlib", "PyMuPDF"]
-
-# Install required packages
-for package in required_packages:
-    try:
-        __import__(package)
-    except ImportError:
-        install(package)
-
 # Import libraries after installation
 import pandas as pd
 import matplotlib.pyplot as plt
