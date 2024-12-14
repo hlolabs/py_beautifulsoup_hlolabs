@@ -1,71 +1,54 @@
-import subprocess
-import sys
-
-# Import libraries after installation
 import pandas as pd
-import matplotlib.pyplot as plt
 import openpyxl
-from openpyxl.drawing.image import Image
-import fitz
+from openpyxl.chart import BarChart, Reference
+import csv
 
-# Function to extract text from a PDF and return a list
-def extract_text_from_pdf(pdf_path):
-    pdf_document = fitz.open(pdf_path)
-    text = ""
-    for page_num in range(len(pdf_document)):
-        page = pdf_document.load_page(page_num)
-        text += page.get_text()
-    return text
+# Read the CSV data
+csv_file = 'funds_data.csv'
 
-# Function to process the extracted text and get the types
-def get_types_from_text(text):
-    lines = text.split('\n')
-    types = []
-    for line in lines:
-        if 'TIPO' in line or line.strip() == '':
-            continue
-        tipo = line.split(":")[0].strip()
-        types.append(tipo)
-    return types
+# Read the CSV file with correct encoding and delimiter (semicolon in your example)
+csv_data = pd.read_csv(csv_file, delimiter=',', encoding='utf-8-sig')
 
-# Extract text from the PDF
-pdf_path = 'funds_data.pdf'  # Path to the PDF file
-text = extract_text_from_pdf(pdf_path)
+# Split the 'TIPO' column into two new columns: 'TIPO_CATEGORY' and 'TIPO_DESCRIPTION'
+csv_data[['TIPO_CATEGORY', 'TIPO_DESCRIPTION']] = csv_data['TIPO'].str.split(':', expand=True)
 
-# Get the types from the extracted text
-data = get_types_from_text(text)
+# Count the frequency of each 'TIPO_CATEGORY'
+frequency = csv_data['TIPO_CATEGORY'].value_counts()
 
-# Create a DataFrame with the data
-df = pd.DataFrame(data, columns=["Type"])
-
-# Count the frequency of each item
-frequency = df["Type"].value_counts()
-
-# Export the frequency data to an Excel file
+# Create a DataFrame from the frequency count
 frequency_df = frequency.reset_index()
 frequency_df.columns = ["Type", "Frequency"]
-frequency_df.to_excel("frequency_funds.xlsx", index=False)
 
-# Create a bar chart
-plt.figure(figsize=(10, 8))
-frequency.plot(kind="bar")
-plt.title("Frequency of Fund Types")
-plt.xlabel("Fund Type")
-plt.ylabel("Frequency")
-plt.xticks(rotation=90)
-plt.tight_layout()
-
-# Save the chart to the Excel file
-with pd.ExcelWriter("frequency_funds.xlsx", engine="openpyxl", mode="a") as writer:
+# Export the frequency data to an Excel file and add the chart
+with pd.ExcelWriter("frequency_funds.xlsx", engine="openpyxl") as writer:
+    # Write frequency data to the 'Frequency' sheet
     frequency_df.to_excel(writer, sheet_name="Frequency", index=False)
     workbook = writer.book
-    worksheet = workbook.create_sheet("Chart")
-    img_data = plt.gcf()
-    img_data.savefig("frequency_chart.png")
-    img = Image("frequency_chart.png")
-    worksheet.add_image(img, "A1")
+    worksheet = workbook["Frequency"]
 
-# Display the chart
-plt.show()
+    # Create the chart
+    chart = BarChart()
+    chart.type = "col"
+    chart.style = 10
+    chart.title = "Frequency of Fund Types"
+    chart.x_axis.title = "Fund Type"
+    chart.y_axis.title = "Frequency"
+    
+    # Define data for the chart
+    data = Reference(worksheet, min_col=2, min_row=1, max_col=2, max_row=len(frequency_df) + 1)
+    categories = Reference(worksheet, min_col=1, min_row=2, max_row=len(frequency_df) + 1)
+    
+    # Add data to the chart
+    chart.add_data(data, titles_from_data=True)
+    chart.set_categories(categories)
 
-print("Data and chart exported to 'frequency_funds.xlsx'.")
+    # Position the chart in the worksheet
+    worksheet.add_chart(chart, "E5")
+
+    # Create a second sheet for all items ordered by 'TIPO'
+    sorted_data = csv_data.sort_values(by='TIPO_CATEGORY')
+
+    # Write the sorted data to the 'All Funds Sorted' sheet
+    sorted_data.to_excel(writer, sheet_name="All Funds Sorted", index=False)
+
+    print("Data, chart, and grouped data exported to 'frequency_funds.xlsx'.")

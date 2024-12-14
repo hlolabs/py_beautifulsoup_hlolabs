@@ -1,10 +1,9 @@
 import subprocess
 import sys
-
-# Import libraries after installation
 import urllib.request
 from bs4 import BeautifulSoup
 import csv
+from fpdf import FPDF  
 
 # URL of the page you want to access
 url = "https://www.fundsexplorer.com.br/funds"
@@ -51,3 +50,34 @@ with open('./funds_data.csv', 'w', newline='', encoding='utf-8-sig') as file:
     writer.writerows(data)
 
 print("Data exported to 'funds_data.csv'.")
+
+# Export data from CSV to PDF
+def export_csv_to_pdf(csv_file, pdf_filename):
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    
+    # Set font
+    pdf.set_font("Arial", size=12)
+    
+    # Opening CSV
+    with open(csv_file, mode='r', encoding='utf-8-sig') as file:
+        reader = csv.reader(file, delimiter=',')
+        
+        # Process each line CSV
+        for row in reader:
+            # Format the line with commas
+            line = ', '.join(row)
+            
+            # Add each line to PDF
+            pdf.cell(200, 10, txt=line, ln=True)
+    
+    # Salve the PDF
+    pdf.output(pdf_filename)
+
+# Export data from CSV to PDF
+csv_file = './funds_data.csv'
+pdf_filename = './funds_data.pdf'
+export_csv_to_pdf(csv_file, pdf_filename)
+
+print(f"CSV data exported to PDF as '{pdf_filename}'.")

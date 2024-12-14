@@ -133,9 +133,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Excel
+# Custom
 *.xls
 *.xlsx
-
-# CSV
 *.csv
+*.pdf 
+temp.py
