@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#teste
+
 # Verificar se o ambiente virtual já existe
 if [ ! -d "venv" ]; then
     # Criar o ambiente virtual
