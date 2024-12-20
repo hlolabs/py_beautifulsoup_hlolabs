@@ -39,6 +39,9 @@ resultados = []
 # Adiciona o cabeçalho
 resultados.append('NOME, Preço, Variação')
 
+# Exibe mensagem de aguarde
+print("Aguarde, processando...")
+
 # Abre o arquivo CSV
 with open(arquivo_csv, mode='r', encoding='utf-8') as file:
     # Lê o conteúdo do arquivo CSV
@@ -47,14 +50,15 @@ with open(arquivo_csv, mode='r', encoding='utf-8') as file:
     # Itera sobre todas as linhas do CSV
     for row in reader:
         nome_fundo = row['NOME']
-        print(f"Acessando URL: {base_url}{nome_fundo.lower()}")
+        # print(f"Acessando URL: {base_url}{nome_fundo.lower()}")  # Comentado
         preco, extra_valor = obter_detalhes_fundo(nome_fundo)
         resultados.append(f"{nome_fundo}, {preco}, {extra_valor}")
-        print(f"Processed {nome_fundo}: {preco}, {extra_valor}")
+        # print(f"Processed {nome_fundo}: {preco}, {extra_valor}")  # Comentado
 
 # Escreve os resultados no arquivo TXT
 with open(arquivo_txt, mode='w', encoding='utf-8') as file:
     for linha in resultados:
         file.write(linha + '\n')
 
+# Exibe mensagem de conclusão
 print("Arquivo de saída criado com sucesso!")
