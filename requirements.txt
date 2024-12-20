@@ -4,3 +4,4 @@ matplotlib
 PyMuPDF
 beautifulsoup4
 fpdf
+requests
