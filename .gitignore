@@ -140,3 +140,6 @@ dmypy.json
 *.pdf 
 temp.py
 *.code-workspace
+*saida.txt
+users_info.json
+users_permissions.json
