@@ -133,7 +133,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Custom
+# Custom by Helldero
 *.xls
 *.xlsx
 *.csv
